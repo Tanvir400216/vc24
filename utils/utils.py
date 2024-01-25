@@ -310,10 +310,10 @@ async def join_call(link, seek, pic, width, height):
 
 async def start_scheduled():
     try:
-        await USER.send(
+        await USER.invoke(
             StartScheduledGroupCall(
                 call=(
-                    await USER.send(
+                    await USER.invoke(
                         GetFullChannel(
                             channel=(
                                 await USER.resolve_peer(
