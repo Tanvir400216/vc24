@@ -154,7 +154,7 @@ async def schedule_a_play(job_id, date):
             if Config.IS_RECORDING:
                 scheduler.add_job(start_record_stream, "date", id=str(Config.CHAT), run_date=date, max_instances=50, misfire_grace_time=None)
             try:
-                await USER.send(CreateGroupCall(
+                await USER.invoke(CreateGroupCall(
                     peer=(await USER.resolve_peer(Config.CHAT)),
                     random_id=random.randint(10000, 999999999),
                     schedule_date=int(date.timestamp()),
