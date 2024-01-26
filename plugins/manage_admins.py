@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Copyright (C) @subinps
+# Copyright (C) @TanvirAhmeadmin 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
@@ -65,7 +65,7 @@ async def add_admin(client, message):
         await delete_messages([message, k])
         return
     Config.ADMINS.append(user_id)
-    k=await message.reply(f"Succesfully promoted {user.mention} as VC admin")
+    k=await message.reply(f"Succesfully promoted {user.mention} as VC admin🌻")
     await sync_to_db()
     await delete_messages([message, k])
 
