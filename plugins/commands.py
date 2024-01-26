@@ -130,7 +130,7 @@ async def start(client, message):
     buttons = [
         [
             InlineKeyboardButton('⚙️ Update Channel', url='https://t.me/sugar_mmy_update'),
-            InlineKeyboardButton('🧩 Source', url='https://github.com/Tanvir055/VCPlayerBot')
+            InlineKeyboardButton('🧩 Source', url='https://github.com/Tanvir555/VCPlayerBot')
         ],
         [
             InlineKeyboardButton('👨🏼‍🦯 Help', callback_data='help_main'),
@@ -188,7 +188,7 @@ async def show_help(client, message):
 async def repo_(client, message):
     buttons = [
         [
-            InlineKeyboardButton('🧩 Repository', url='https://github.com/Tanvir055/VCPlayerBot'),
+            InlineKeyboardButton('🧩 Repository', url='https://github.com/Tanvir555/VCPlayerBot'),
             InlineKeyboardButton('⚙️ Update Channel', url='https://t.me/sugar_mmy_update'),     
         ],
         [
