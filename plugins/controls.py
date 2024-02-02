@@ -14,6 +14,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 from utils import LOGGER
 from pyrogram.types import Message
+from pyrogram import enums
 from config import Config
 from pyrogram import (
     Client, 
@@ -41,8 +42,13 @@ from utils import (
 
 admin_filter=filters.create(is_admin)   
 
-@Client.on_message(filters.command(["playlist", f"playlist@{Config.BOT_USERNAME}"]) & chat_filter)
+@Client.on_message(filters.command(["playlist", f"playlist@{Config.BOT_USERNAME}"]) )
 async def player(client, message):
+    # Check if the command is used in a group chat
+    if message.chat.type != enums.ChatType.PRIVATE:
+        administrators = []
+        async for member in client.get_chat_members(message.chat.id, filter=enums.ChatMembersFilter.ADMINISTRATORS):
+            administrators.append(member.user.id)
     if not Config.CALL_STATUS:
         await message.reply_text(
             "Player is idle, start the player using below button. ㅤㅤㅤㅤ",
@@ -52,7 +58,7 @@ async def player(client, message):
         await delete_messages([message])
         return
     pl = await get_playlist_str()
-    if message.chat.type == "private":
+    if message.chat.type == enums.ChatType.PRIVATE:
         await message.reply_text(
             pl,
             disable_web_page_preview=True,
@@ -64,6 +70,7 @@ async def player(client, message):
         Config.msg['player'] = await message.reply_text(
             pl,
             disable_web_page_preview=True,
+            quote=False
             reply_markup=await get_buttons(),
         )
     await delete_messages([message])
@@ -120,13 +127,16 @@ async def pause_playing(_, m: Message):
             disable_web_page_preview=True,
             reply_markup=await get_buttons()
         )
-        await delete_messages([m])
+        
         return
     if Config.PAUSE:
-        k = await m.reply("Already Paused")
-        await delete_messages([m, k])
+         await message.reply("Already Paused")
+
+
+
+        
         return
-    k = await m.reply("Paused Video Call")
+        await message.reply("Paused Video Call")
     await pause()
     await delete_messages([m, k])
     
@@ -161,16 +171,16 @@ async def set_vol(_, m: Message):
         )
         await delete_messages([m])
         return
-    if len(m.command) < 2:
+    if len(message.command) < 2:
         await m.reply_text('Change Volume of Your VCPlayer. ㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤ', reply_markup=await volume_buttons())
-        await delete_messages([m])
+        )
         return
     if not 1 < int(m.command[1]) < 200:
-        await m.reply_text(f"Only 1-200 range is accepeted. ㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤ", reply_markup=await volume_buttons())
+        await message.reply_text(f"Only 1-200 range is accepeted. ㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤ", reply_markup=await volume_buttons())
     else:
         await volume(int(m.command[1]))
-        await m.reply_text(f"Succesfully set volume to {m.command[1]} ㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤ", reply_markup=await volume_buttons())
-    await delete_messages([m])
+        await message.reply_text(f"Succesfully set volume to {m.command[1]} ㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤ", reply_markup=await volume_buttons())
+    await delete_messages([message])
 
     
 
@@ -178,47 +188,47 @@ async def set_vol(_, m: Message):
 @Client.on_message(filters.command(['vcmute', f"vcmute@{Config.BOT_USERNAME}"]) & admin_filter & chat_filter)
 async def set_mute(_, m: Message):
     if not Config.CALL_STATUS:
-        await m.reply_text(
+        await message.reply_text(
             "Player is idle, start the player using below button. ㅤㅤㅤㅤㅤㅤㅤㅤ",
             disable_web_page_preview=True,
             reply_markup=await get_buttons()
         )
-        await delete_messages([m])
+        
         return
     if Config.MUTED:
-        k = await m.reply_text("Already muted.")
-        await delete_messages([m, k])
+        k = await message.reply_text("Already muted.")
+        
         return
     k=await mute()
     if k:
-        k = await m.reply_text(f" 🔇 Succesfully Muted ")
-        await delete_messages([m, k])
+        k = await message.reply_text(f" 🔇 Succesfully Muted ")
+        
     else:
-        k = await m.reply_text("Already muted.")
-        await delete_messages([m, k])
+        k = await message.reply_text("Already muted.")
+        
     
 @Client.on_message(filters.command(['vcunmute', f"vcunmute@{Config.BOT_USERNAME}"]) & admin_filter & chat_filter)
 async def set_unmute(_, m: Message):
     if not Config.CALL_STATUS:
-        await m.reply_text(
+        await message.reply_text(
             "Player is idle, start the player using below button. ㅤㅤㅤㅤㅤ",
             disable_web_page_preview=True,
             reply_markup=await get_buttons()
         )
-        await delete_messages([m])
+        )
         return
     if not Config.MUTED:
-        k = await m.reply("Stream already unmuted.")
-        await delete_messages([m, k])
+         await message.reply("Stream already unmuted.")
+        )
         return
-    k=await unmute()
+    await unmute()
     if k:
-        k = await m.reply_text(f"🔊 Succesfully Unmuted ")
-        await delete_messages([m, k])
+         await message.reply_text(f"🔊 Succesfully Unmuted ")
+        
         return
     else:
-        k=await m.reply_text("Not muted, already unmuted.")    
-        await delete_messages([m, k])
+        await message.reply_text("Not muted, already unmuted.")    
+       ) 
 
 
 @Client.on_message(filters.command(["replay", f"replay@{Config.BOT_USERNAME}"]) & admin_filter & chat_filter)
@@ -321,7 +331,7 @@ async def seek_playout(client, m: Message):
         await delete_messages([m])
     else:
         await k.edit('No time specified')
-        await delete_messages([m, k])
+        )
 
 
 @Client.on_message(filters.command(["settings", f"settings@{Config.BOT_USERNAME}"]) & admin_filter & chat_filter)
