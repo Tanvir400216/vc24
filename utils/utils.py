@@ -254,7 +254,7 @@ async def skip():
 
 
 async def check_vc():
-    a = await bot.send(GetFullChannel(channel=(await bot.resolve_peer(Config.CHAT))))
+    a = await bot.invoke(GetFullChannel(channel=(await bot.resolve_peer(Config.CHAT))))
     if a.full_chat.call is None:
         try:
             LOGGER.info("No active calls found, creating new")
