@@ -47,9 +47,9 @@ debug = Client(
 @debug.on_message(filters.command(['env', f"env@{Config.BOT_USERNAME}", "config", f"config@{Config.BOT_USERNAME}"]) & filters.private & filters.user(Config.ADMINS))
 async def set_heroku_var(client, message):
     if message.from_user.id not in Config.SUDO:
-        return await message.reply(f"/env command can only be used by creator of the bot, ({str(Config.SUDO)})")
+        return await message.answer(f"/env command can only be used by creator of the bot, ({str(Config.SUDO)})")
     with suppress(MessageIdInvalid, MessageNotModified):
-        m = await message.reply("Checking config vars..")
+        m = await message.answer("Checking config vars..")
         if " " in message.text:
             cmd, env = message.text.split(" ", 1)
             if  not "=" in env:
@@ -135,7 +135,7 @@ async def set_heroku_var(client, message):
 
 @debug.on_message(filters.command(["restart", f"restart@{Config.BOT_USERNAME}"]) & filters.private & filters.user(Config.ADMINS))
 async def update(bot, message):
-    m=await message.reply("Restarting with new changes..")
+    m=await message.answer("Restarting with new changes..")
     if Config.DATABASE_URI:
         msg = {"msg_id":m.message_id, "chat_id":m.chat.id}
         if not await db.is_saved("RESTART"):
@@ -189,16 +189,16 @@ async def skip_track(_, m: Message):
 
 @debug.on_message(filters.command(['logs', f"logs@{Config.BOT_USERNAME}"]) & filters.private & filters.user(Config.ADMINS))
 async def get_logs(client, message):
-    m=await message.reply("Checking logs..")
+    m=await message.answer("Checking logs..")
     if os.path.exists("botlog.txt"):
-        await message.reply_document('botlog.txt', caption="Bot Logs")
+        await message.answer_document('botlog.txt', caption="Bot Logs")
         await m.delete()
     else:
         k = await m.edit("No log files found.")
 
 @debug.on_message(filters.text & filters.private)
 async def reply_else(bot, message):
-    await message.reply(f"Development mode is activated.\nThis occures when there are some errors in startup of the bot.\nOnly Configuration commands works in development mode.\nAvailabe commands are /env, /skip, /clearplaylist and /restart and /logs\n\n**The cause for activation of development mode was**\n\n`{str(Config.STARTUP_ERROR)}`")
+    await message.answer(f"Development mode is activated.\nThis occures when there are some errors in startup of the bot.\nOnly Configuration commands works in development mode.\nAvailabe commands are /env, /skip, /clearplaylist and /restart and /logs\n\n**The cause for activation of development mode was**\n\n`{str(Config.STARTUP_ERROR)}`")
 
 def stop_and_restart():
     os.system("git pull")
