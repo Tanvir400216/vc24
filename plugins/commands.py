@@ -20,6 +20,12 @@ import pytz
 from datetime import datetime
 import asyncio
 import os
+from pyrogram import Client, filters
+
+from pyrogram.types import (
+    InlineKeyboardMarkup, 
+    InlineKeyboardButton
+    )
 from pyrogram.errors.exceptions.bad_request_400 import (
     MessageIdInvalid, 
     MessageNotModified
@@ -60,7 +66,7 @@ admin_filter=filters.create(is_admin)
 async def start(client, message):
     if len(message.command) > 1:
         if message.command[1] == 'help':
-            reply_markup=InlineKeyboardMarkup(
+            reply_markup = InlineKeyboardMarkup(
                 [
                     [
                         InlineKeyboardButton(f"Play", callback_data='help_play'),
@@ -83,9 +89,9 @@ async def start(client, message):
                 disable_web_page_preview=True
                 )
         elif 'sch' in message.command[1]:
-            msg=await message.reply("Checking schedules..")
-            you, me = message.command[1].split("_", 1)
-            who=Config.SCHEDULED_STREAM.get(me)
+            msg = await message.reply("Checking schedules..")
+            you, me = message.command[1].split("_", 1)# Splitting for extracting specific info
+            who = Config.SCHEDULED_STREAM.get(me)
             if not who:
                 return await msg.edit("Something gone somewhere.")
             del Config.SCHEDULED_STREAM[me]
@@ -224,19 +230,47 @@ async def update_handler(client, message):
         pass
     await update()
 
-@Client.on_message(filters.command(['logs', f"logs@{Config.BOT_USERNAME}"]) & admin_filter & chat_filter)
+@Client.on_message(filters.command(['logs', f"logs@{Config.BOT_USERNAME}"]) )
 async def get_logs(client, message):
-    m=await message.reply("Checking logs..")
+    if message.chat.type != "private" and message.from_user.id not in Config.ADMINS:
+        await message.reply("Sorry, You are not authorized 😒", quote=False)
+        return
+
+    m = await message.reply("<b>Checking logs, please wait...</b>", quote=False)
     if os.path.exists("botlog.txt"):
         await message.reply_document('botlog.txt', caption="Bot Logs")
         await m.delete()
-        await delete_messages([message])
+        
     else:
         k = await m.edit("No log files found.")
-        await delete_messages([message, k])
+        
 
 @Client.on_message(filters.command(['env', f"env@{Config.BOT_USERNAME}", "config", f"config@{Config.BOT_USERNAME}"]) & sudo_filter & chat_filter)
 async def set_heroku_var(client, message):
+  print("Command received")  # Debugging: Command entry point
+
+    # Checking if the user is not an admin. This check applies to both private and group chats.
+    if message.from_user.id not in Config.ADMINS:
+        print("Unauthorized attempt blocked")  # Debugging: Unauthorized attempt
+        await message.reply("Sorry, You are not authorized 😒")
+        return
+
+    m = await message.reply("Checking config vars....")
+    print("Processing command")  # Debugging: Processing begins
+
+    if " " in message.text:
+        _, env = message.text.split(" ", 1)
+        if "=" in env:
+            var, value = env.split("=", 1)
+            print(f"Variable to set: {var}, Value: {value}")  # Debugging: Variable and value to be set
+        else:
+            print(f"Invalid format for env variable: {env}")  # Debugging: Incorrect format
+            await m.edit("<b Invalid command format. Use /env VAR=VALUE.</b>")
+            return
+    else:
+        print("No env variable provided")  # Debugging: No variable provided
+        await m.edit("<b>You haven't provided any value for env,\nYou should follow the correct format.\nExample: <code>/env CHAT=-1020202020202</code></b>")
+        return
     with suppress(MessageIdInvalid, MessageNotModified):
         m = await message.reply("Checking config vars..")
         if " " in message.text:
