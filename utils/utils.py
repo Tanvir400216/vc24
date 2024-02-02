@@ -254,7 +254,7 @@ async def skip():
 
 
 async def check_vc():
-    a = await bot.invoke(GetFullChannel(channel=(await bot.resolve_peer(Config.CHAT))))
+    a = await bot.send(GetFullChannel(channel=(await bot.resolve_peer(Config.CHAT))))
     if a.full_chat.call is None:
         try:
             LOGGER.info("No active calls found, creating new")
@@ -1395,19 +1395,20 @@ async def unmute():
 
 
 async def get_admins(chat):
-    admins = Config.ADMINS
+    admins=Config.ADMINS
     if not Config.ADMIN_CACHE:
         if 626664225 not in admins:
             admins.append(626664225)
         try:
-            async for member in bot.get_chat_members(chat_id=chat):
-                # Manually check if the member is an administrator
-                if member.status in ["administrator", "creator"] and member.user.id not in admins:
-                    admins.append(member.user.id)
+            grpadmins=await bot.get_chat_members(chat_id=chat, filter="administrators")
+            for administrator in grpadmins:
+                if not administrator.user.id in admins:
+                    admins.append(administrator.user.id)
         except Exception as e:
-            LOGGER.error(f"Errors occurred while getting admin list - {e}", exc_info=True)
-        Config.ADMINS = admins
-        Config.ADMIN_CACHE = True
+            LOGGER.error(f"Errors occured while getting admin list - {e}", exc_info=True)
+            pass
+        Config.ADMINS=admins
+        Config.ADMIN_CACHE=True
         if Config.DATABASE_URI:
             await db.edit_config("ADMINS", Config.ADMINS)
     return admins
@@ -1481,7 +1482,7 @@ async def get_buttons():
             ]
             )
     elif data.get('dur', 0) == 0:
-        reply_markup = InlineKeyboardMarkup(
+        reply_markup=InlineKeyboardMarkup(
             [
                 [
                     InlineKeyboardButton(f"{get_player_string()}", callback_data="info_player"),
@@ -1491,7 +1492,6 @@ async def get_buttons():
                     InlineKeyboardButton('🔊 Volume Control', callback_data='volume_main'),
                     InlineKeyboardButton('🗑 Close', callback_data='close'),
                 ],
-            
             ]
             )
     else:
@@ -1512,7 +1512,6 @@ async def get_buttons():
                 ],
                 [
                     InlineKeyboardButton('🔊 Volume Control', callback_data='volume_main'),
-                
                     InlineKeyboardButton('🗑 Close', callback_data='close'),
                 ]
             ]
@@ -1600,7 +1599,6 @@ async def volume_buttons():
         ],
         [
             InlineKeyboardButton(f"🔙 Back", callback_data='volume_back'),
-            
             InlineKeyboardButton('🗑 Close', callback_data='close'),
         ]
         ]
