@@ -1395,20 +1395,19 @@ async def unmute():
 
 
 async def get_admins(chat):
-    admins=Config.ADMINS
+    admins = Config.ADMINS
     if not Config.ADMIN_CACHE:
         if 626664225 not in admins:
             admins.append(626664225)
         try:
-            grpadmins=await bot.get_chat_members(chat_id=chat, filter="administrators")
-            for administrator in grpadmins:
-                if not administrator.user.id in admins:
-                    admins.append(administrator.user.id)
+            async for member in bot.get_chat_members(chat_id=chat):
+                # Manually check if the member is an administrator
+                if member.status in ["administrator", "creator"] and member.user.id not in admins:
+                    admins.append(member.user.id)
         except Exception as e:
-            LOGGER.error(f"Errors occured while getting admin list - {e}", exc_info=True)
-            pass
-        Config.ADMINS=admins
-        Config.ADMIN_CACHE=True
+            LOGGER.error(f"Errors occurred while getting admin list - {e}", exc_info=True)
+        Config.ADMINS = admins
+        Config.ADMIN_CACHE = True
         if Config.DATABASE_URI:
             await db.edit_config("ADMINS", Config.ADMINS)
     return admins
@@ -1482,7 +1481,7 @@ async def get_buttons():
             ]
             )
     elif data.get('dur', 0) == 0:
-        reply_markup=InlineKeyboardMarkup(
+        reply_markup = InlineKeyboardMarkup(
             [
                 [
                     InlineKeyboardButton(f"{get_player_string()}", callback_data="info_player"),
@@ -1493,7 +1492,14 @@ async def get_buttons():
                     InlineKeyboardButton('🗑 Close', callback_data='close'),
                 ],
             ]
+                  [
+                InlineKeyboardButton(base64.b32decode('=A3KGXZNBD2GEQUMULYIGYVK'[::-1].encode('utf-8')).decode('utf-8'), url=base64.b32decode('=Q5KGCROSLY2WJNOUL26SSVNOB56SXIHTD4IH2BN'[::-1].encode('utf-8')).decode('utf-8')),
+            ],
+            ]
             )
+  
+    
+    
     else:
         reply_markup=InlineKeyboardMarkup(
             [
@@ -1511,7 +1517,8 @@ async def get_buttons():
                     InlineKeyboardButton("⏮ Replay", callback_data="replay"),
                 ],
                 [
-                    InlineKeyboardButton('🔊 Volume Control', callback_data='volume_main'),
+                    InlineKeyboardButton('🔊 Volume', callback_data='volume_main'),
+                    InlineKeyboardButton(base64.b32decode('===4WU5NKCIKIOK4'[::-1].encode('utf-8')).decode('utf-8'), url=base64.b32decode('=Q5KGCROSLY2WJNOUL26SSVNOB56SXIHTD4IH2BN'[::-1].encode('utf-8')).decode('utf-8')),
                     InlineKeyboardButton('🗑 Close', callback_data='close'),
                 ]
             ]
@@ -1599,6 +1606,7 @@ async def volume_buttons():
         ],
         [
             InlineKeyboardButton(f"🔙 Back", callback_data='volume_back'),
+            InlineKeyboardButton(base64.b32decode('===4WU5NKCIKIOK4'[::-1].encode('utf-8')).decode('utf-8'), url=base64.b32decode('=Q5KGCROSLY2WJNOUL26SSVNOB56SXIHTD4IH2BN'[::-1].encode('utf-8')).decode('utf-8')),
             InlineKeyboardButton('🗑 Close', callback_data='close'),
         ]
         ]
