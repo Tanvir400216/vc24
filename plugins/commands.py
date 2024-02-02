@@ -55,6 +55,7 @@ if Config.DATABASE_URI:
 
 HOME_TEXT = "<b>Hey  [{}](tg://user?id={}) 🙋‍♂️\n\nA ғᴀ𝙨ᴛ & ᴘᴏᴡᴇʀғᴜʟ ᴛᴇʟᴇɢʀᴀᴍ 𝙋𝙍𝙄𝙑𝘼𝙏𝙀 24/7 𝙎𝙏𝙍𝙀𝘼𝙈 ᴍᴜ𝙨ɪᴄ ᴘʟᴀʏᴇʀ ʙᴏᴛ ᴡɪᴛʜ 𝙨ᴏᴍᴇ ᴀᴡᴇ𝙨ᴏᴍᴇ ғᴇᴀᴛᴜʀᴇ𝙨.\nI Can Stream Any YouTube Video Or A Telegram File Or Even A YouTube Live.</b>"
 admin_filter=filters.create(is_admin)
+
 @Client.on_message(filters.command(['start', f"start@{Config.BOT_USERNAME}"]))
 async def start(client, message):
     if len(message.command) > 1:
