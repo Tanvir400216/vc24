@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Copyright (C) TanvirAhmed_555
+# Copyright (C) @TanvirAhmed_555
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
@@ -20,12 +20,6 @@ import pytz
 from datetime import datetime
 import asyncio
 import os
-from pyrogram import Client, filters
-
-from pyrogram.types import (
-    InlineKeyboardMarkup, 
-    InlineKeyboardButton
-    )
 from pyrogram.errors.exceptions.bad_request_400 import (
     MessageIdInvalid, 
     MessageNotModified
@@ -59,14 +53,14 @@ IST = pytz.timezone(Config.TIME_ZONE)
 if Config.DATABASE_URI:
     from utils import db
 
-HOME_TEXT = "<b>Hey  [{}](tg://user?id={}) 🙋‍♂️\n\nA ғᴀ𝙨ᴛ & ᴘᴏᴡᴇʀғᴜʟ ᴛᴇʟᴇɢʀᴀᴍ 𝙋𝙍𝙄𝙑𝘼𝙏𝙀 24/7 𝙎𝙏𝙍𝙀𝘼𝙈 ᴍᴜ𝙨ɪᴄ ᴘʟᴀʏᴇʀ ʙᴏᴛ ᴡɪᴛʜ 𝙨ᴏᴍᴇ ᴀᴡᴇ𝙨ᴏᴍᴇ ғᴇᴀᴛᴜʀᴇ𝙨.\nI Can Stream Any YouTube Video Or A Telegram File Or Even A YouTube Live.</b>"
+HOME_TEXT = "<b>Hey  [{}](tg://user?id={}) 🙋‍♂️\n\nIam A Bot Built To Play or Stream Videos In Telegram VoiceChats.\nI Can Stream Any YouTube Video Or A Telegram File Or Even A YouTube Live.</b>"
 admin_filter=filters.create(is_admin) 
 
 @Client.on_message(filters.command(['start', f"start@{Config.BOT_USERNAME}"]))
 async def start(client, message):
     if len(message.command) > 1:
         if message.command[1] == 'help':
-            reply_markup = InlineKeyboardMarkup(
+            reply_markup=InlineKeyboardMarkup(
                 [
                     [
                         InlineKeyboardButton(f"Play", callback_data='help_play'),
@@ -89,9 +83,9 @@ async def start(client, message):
                 disable_web_page_preview=True
                 )
         elif 'sch' in message.command[1]:
-            msg = await message.reply("Checking schedules..")
-            you, me = message.command[1].split("_", 1)# Splitting for extracting specific info
-            who = Config.SCHEDULED_STREAM.get(me)
+            msg=await message.reply("Checking schedules..")
+            you, me = message.command[1].split("_", 1)
+            who=Config.SCHEDULED_STREAM.get(me)
             if not who:
                 return await msg.edit("Something gone somewhere.")
             del Config.SCHEDULED_STREAM[me]
@@ -136,7 +130,7 @@ async def start(client, message):
     buttons = [
         [
             InlineKeyboardButton('⚙️ Update Channel', url='https://t.me/sugar_mmy_update'),
-            InlineKeyboardButton('🧩 Source', url='https://github.com/Tanvir555/VCPlayerBot')
+            InlineKeyboardButton('🧩 Source', url='https://github.com/Tanvir_555_Vcplayer')
         ],
         [
             InlineKeyboardButton('👨🏼‍🦯 Help', callback_data='help_main'),
@@ -194,15 +188,15 @@ async def show_help(client, message):
 async def repo_(client, message):
     buttons = [
         [
-            InlineKeyboardButton('🧩 Repository', url='https://github.com/Tanvir555/VCPlayerBot'),
-            InlineKeyboardButton('⚙️ Update Channel', url='https://t.me/sugar_mmy_update'),     
+            InlineKeyboardButton('🧩 Repository', url='https://github.com/subinps/VCPlayerBot'),
+            InlineKeyboardButton('⚙️ Update Channel', url='https://t.me/subin_works'),     
         ],
         [
             InlineKeyboardButton("🎞 How to Deploy", url='https://youtu.be/mnWgZMrNe_0'),
             InlineKeyboardButton('🗑 Close', callback_data='close'),
         ]
     ]
-    await message.reply("<b>The source code of this bot is public and can be found at <a href=https://github.com/Tanvir555/VCPlayerBot>VCPlayerBot.</a>\nYou can deploy your own bot and use in your group.\n\nFeel free to star☀️ the repo if you liked it 🙃.</b>", reply_markup=InlineKeyboardMarkup(buttons), disable_web_page_preview=True)
+    await message.reply("<b>The source code of this bot is public and can be found at <a href=https://github.com/subinps/VCPlayerBot>VCPlayerBot.</a>\nYou can deploy your own bot and use in your group.\n\nFeel free to star☀️ the repo if you liked it 🙃.</b>", reply_markup=InlineKeyboardMarkup(buttons), disable_web_page_preview=True)
     await delete_messages([message])
 
 @Client.on_message(filters.command(['restart', 'update', f"restart@{Config.BOT_USERNAME}", f"update@{Config.BOT_USERNAME}"]) & admin_filter & chat_filter)
@@ -230,47 +224,19 @@ async def update_handler(client, message):
         pass
     await update()
 
-@Client.on_message(filters.command(['logs', f"logs@{Config.BOT_USERNAME}"]) )
+@Client.on_message(filters.command(['logs', f"logs@{Config.BOT_USERNAME}"]) & admin_filter & chat_filter)
 async def get_logs(client, message):
-    if message.chat.type != "private" and message.from_user.id not in Config.ADMINS:
-        await message.reply("Sorry, You are not authorized 😒", quote=False)
-        return
-
-    m = await message.reply("<b>Checking logs, please wait...</b>", quote=False)
+    m=await message.reply("Checking logs..")
     if os.path.exists("botlog.txt"):
         await message.reply_document('botlog.txt', caption="Bot Logs")
         await m.delete()
-        
+        await delete_messages([message])
     else:
         k = await m.edit("No log files found.")
-        
+        await delete_messages([message, k])
 
 @Client.on_message(filters.command(['env', f"env@{Config.BOT_USERNAME}", "config", f"config@{Config.BOT_USERNAME}"]) & sudo_filter & chat_filter)
 async def set_heroku_var(client, message):
-  print("Command received")  # Debugging: Command entry point
-
-    # Checking if the user is not an admin. This check applies to both private and group chats.
-    if message.from_user.id not in Config.ADMINS:
-        print("Unauthorized attempt blocked")  # Debugging: Unauthorized attempt
-        await message.reply("Sorry, You are not authorized 😒")
-        return
-
-    m = await message.reply("Checking config vars....")
-    print("Processing command")  # Debugging: Processing begins
-
-    if " " in message.text:
-        _, env = message.text.split(" ", 1)
-        if "=" in env:
-            var, value = env.split("=", 1)
-            print(f"Variable to set: {var}, Value: {value}")  # Debugging: Variable and value to be set
-        else:
-            print(f"Invalid format for env variable: {env}")  # Debugging: Incorrect format
-            await m.edit("<b Invalid command format. Use /env VAR=VALUE.</b>")
-            return
-    else:
-        print("No env variable provided")  # Debugging: No variable provided
-        await m.edit("<b>You haven't provided any value for env,\nYou should follow the correct format.\nExample: <code>/env CHAT=-1020202020202</code></b>")
-        return
     with suppress(MessageIdInvalid, MessageNotModified):
         m = await message.reply("Checking config vars..")
         if " " in message.text:
@@ -412,7 +378,3 @@ async def set_heroku_var(client, message):
                 else:
                     await db.edit_config("RESTART", msg)
             config[var] = str(value)
-
-
-
-
