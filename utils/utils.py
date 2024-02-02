@@ -1491,15 +1491,9 @@ async def get_buttons():
                     InlineKeyboardButton('🔊 Volume Control', callback_data='volume_main'),
                     InlineKeyboardButton('🗑 Close', callback_data='close'),
                 ],
-            ]
-                  [
-                InlineKeyboardButton(base64.b32decode('=A3KGXZNBD2GEQUMULYIGYVK'[::-1].encode('utf-8')).decode('utf-8'), url=base64.b32decode('=Q5KGCROSLY2WJNOUL26SSVNOB56SXIHTD4IH2BN'[::-1].encode('utf-8')).decode('utf-8')),
-            ],
+            
             ]
             )
-  
-    
-    
     else:
         reply_markup=InlineKeyboardMarkup(
             [
@@ -1517,8 +1511,8 @@ async def get_buttons():
                     InlineKeyboardButton("⏮ Replay", callback_data="replay"),
                 ],
                 [
-                    InlineKeyboardButton('🔊 Volume', callback_data='volume_main'),
-                    InlineKeyboardButton(base64.b32decode('===4WU5NKCIKIOK4'[::-1].encode('utf-8')).decode('utf-8'), url=base64.b32decode('=Q5KGCROSLY2WJNOUL26SSVNOB56SXIHTD4IH2BN'[::-1].encode('utf-8')).decode('utf-8')),
+                    InlineKeyboardButton('🔊 Volume Control', callback_data='volume_main'),
+                
                     InlineKeyboardButton('🗑 Close', callback_data='close'),
                 ]
             ]
@@ -1606,7 +1600,7 @@ async def volume_buttons():
         ],
         [
             InlineKeyboardButton(f"🔙 Back", callback_data='volume_back'),
-            InlineKeyboardButton(base64.b32decode('===4WU5NKCIKIOK4'[::-1].encode('utf-8')).decode('utf-8'), url=base64.b32decode('=Q5KGCROSLY2WJNOUL26SSVNOB56SXIHTD4IH2BN'[::-1].encode('utf-8')).decode('utf-8')),
+            
             InlineKeyboardButton('🗑 Close', callback_data='close'),
         ]
         ]
