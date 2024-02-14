@@ -1064,7 +1064,7 @@ async def start_record_stream():
     async def renew_recording():
     try:
         job=str(Config.CHAT)
-        a = await bot.invoke(GetFullChannel(channel=(await bot.resolve_peer(Config.CHAT))))
+        a = await bot.send(GetFullChannel(channel=(await bot.resolve_peer(Config.CHAT))))
         if a.full_chat.call is None:
             k=scheduler.get_job(job_id=job, jobstore=None)
             if k:
