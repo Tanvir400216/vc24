@@ -106,9 +106,9 @@ async def cb_handler(client: Client, query: CallbackQuery):
 
 
         elif query.data.startswith("help"):
-            if query.message.chat.type != "private" and query.message.reply_to_message.from_user is None:
+            if query.message.chat.type != enums.ChatType.PRIVATE and query.message.reply_to_message.from_user is None:
                 return await query.answer("I cant help you here, since you are an anonymous admin, message me in private chat.", show_alert=True)
-            elif query.message.chat.type != "private" and query.from_user.id != query.message.reply_to_message.from_user.id:
+            elif query.message.chat.type != enums.ChatType.PRIVATE and query.from_user.id != query.message.reply_to_message.from_user.id:
                 return await query.answer("Okda", show_alert=True)
             me, nyav = query.data.split("_")
             back=InlineKeyboardMarkup(
@@ -166,9 +166,9 @@ async def cb_handler(client: Client, query: CallbackQuery):
             return
         #scheduler stuffs
         if query.data.startswith("sch"):
-            if query.message.chat.type != "private" and query.message.reply_to_message.from_user is None:
+            if query.message.chat.type != enums.ChatType.PRIVATE and query.message.reply_to_message.from_user is None:
                 return await query.answer("You cant use scheduling here, since you are an anonymous admin. Schedule from private chat.", show_alert=True)
-            if query.message.chat.type != "private" and query.from_user.id != query.message.reply_to_message.from_user.id:
+            if query.message.chat.type != enums.ChatType.PRIVATE and query.from_user.id != query.message.reply_to_message.from_user.id:
                 return await query.answer("Okda", show_alert=True)
             data = query.data
             today = datetime.datetime.now(IST)
@@ -404,9 +404,11 @@ async def cb_handler(client: Client, query: CallbackQuery):
         elif query.data.lower() == "mute":
             if Config.MUTED:
                 await unmute()
+                Config.MUTED = False
                 await query.answer("Unmuted stream")
             else:
                 await mute()
+                Config.MUTED = True
                 await query.answer("Muted stream")
             await sleep(1)
             await query.message.edit_reply_markup(reply_markup=await volume_buttons())
@@ -563,7 +565,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
                 else:
                     await query.answer("This can only be used by SUDO users", show_alert=True)  
             else:
-                if query.message.chat.type != "private" and query.message.reply_to_message:
+                if query.message.chat.type != enums.ChatType.PRIVATE and query.message.reply_to_message:
                     if query.message.reply_to_message.from_user is None:
                         pass
                     elif query.from_user.id != query.message.reply_to_message.from_user.id:
