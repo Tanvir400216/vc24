@@ -1,5 +1,5 @@
 #  Pyrogram - Telegram MTProto API Client Library for Python
-#  Copyright (C) 2017-2021 Dan <https://github.com/delivrance>
+#  Copyright (C) 2017-2024 Dan <https://github.com/delivrance>
 #
 #  This file is part of Pyrogram.
 #
@@ -276,7 +276,7 @@ class Downloader():
 
                             if isinstance(r2, raw.types.upload.CdnFileReuploadNeeded):
                                 try:
-                                    await session.send(
+                                    await session.invoke(
                                         raw.functions.upload.ReuploadCdnFile(
                                             file_token=r.file_token,
                                             request_token=r2.request_token
