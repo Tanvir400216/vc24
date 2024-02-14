@@ -941,8 +941,8 @@ async def stop_recording():
                             )
                         )
                     ).full_chat.call,
-                start=False,                 
-            )
+                                start=False,                 
+                )                 
             )
         Config.IS_RECORDING=False
         Config.LISTEN=True
@@ -1096,7 +1096,8 @@ async def start_record_stream():
                                 )
                             )
                         ).full_chat.call,
-                    start=True                  title=tt,
+                    start=True,
+                    title=tt,                  title=tt,
                     video=True,
                     video_portrait=pt,                 
                     )
