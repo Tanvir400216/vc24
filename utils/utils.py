@@ -1061,7 +1061,7 @@ async def start_record_stream():
             await sync_to_db()
             return False, str(e)
 
-    async def renew_recording():
+async def renew_recording():
     try:
         job=str(Config.CHAT)
         a = await bot.send(GetFullChannel(channel=(await bot.resolve_peer(Config.CHAT))))
