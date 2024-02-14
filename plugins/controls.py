@@ -13,6 +13,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 from utils import LOGGER
+from pyrogram import enums
 from pyrogram.types import Message
 from config import Config
 from pyrogram import (
@@ -52,7 +53,7 @@ async def player(client, message):
         await delete_messages([message])
         return
     pl = await get_playlist_str()
-    if message.chat.type == "private":
+    if message.chat.type == enums.ChatType.PRIVATE:
         await message.reply_text(
             pl,
             disable_web_page_preview=True,
@@ -104,9 +105,9 @@ async def skip_track(_, m: Message):
             await msg.edit("Invalid input")
             await delete_messages([m, msg])
     pl=await get_playlist_str()
-    if m.chat.type == "private":
+    if m.chat.type == enums.ChatType.PRIVATE:
         await msg.edit(pl, disable_web_page_preview=True, reply_markup=await get_buttons())
-    elif not Config.LOG_GROUP and m.chat.type == "supergroup":
+    elif not Config.LOG_GROUP and m.chat.type == enums.ChatType.SUPERGROUP:
         if Config.msg.get('player'):
             await Config.msg['player'].delete()
         Config.msg['player'] = await msg.edit(pl, disable_web_page_preview=True, reply_markup=await get_buttons())
@@ -190,6 +191,7 @@ async def set_mute(_, m: Message):
         await delete_messages([m, k])
         return
     k=await mute()
+    Config.MUTED = True
     if k:
         k = await m.reply_text(f" 🔇 Succesfully Muted ")
         await delete_messages([m, k])
@@ -212,6 +214,7 @@ async def set_unmute(_, m: Message):
         await delete_messages([m, k])
         return
     k=await unmute()
+    Config.MUTED = False
     if k:
         k = await m.reply_text(f"🔊 Succesfully Unmuted ")
         await delete_messages([m, k])
@@ -258,7 +261,7 @@ async def show_player(client, m: Message):
             title=f"<b>Stream Using [Url]({data['file']}) </b> ㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤ"
         else:
             title=f"<b>Streaming Startup [stream]({Config.STREAM_URL})</b> ㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤ"
-    if m.chat.type == "private":
+    if m.chat.type == enums.ChatType.PRIVATE:
         await m.reply_text(
             title,
             disable_web_page_preview=True,
