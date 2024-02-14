@@ -154,7 +154,7 @@ async def schedule_a_play(job_id, date):
             if Config.IS_RECORDING:
                 scheduler.add_job(start_record_stream, "date", id=str(Config.CHAT), run_date=date, max_instances=50, misfire_grace_time=None)
             try:
-                await USER.send(CreateGroupCall(
+                await USER.invoke(CreateGroupCall(
                     peer=(await USER.resolve_peer(Config.CHAT)),
                     random_id=random.randint(10000, 999999999),
                     schedule_date=int(date.timestamp()),
@@ -258,7 +258,7 @@ async def check_vc():
     if a.full_chat.call is None:
         try:
             LOGGER.info("No active calls found, creating new")
-            await USER.send(CreateGroupCall(
+            await USER.invoke(CreateGroupCall(
                 peer=(await USER.resolve_peer(Config.CHAT)),
                 random_id=random.randint(10000, 999999999)
                 )
@@ -310,10 +310,10 @@ async def join_call(link, seek, pic, width, height):
 
 async def start_scheduled():
     try:
-        await USER.send(
+        await USER.invoke(
             StartScheduledGroupCall(
                 call=(
-                    await USER.send(
+                    await USER.invoke(
                         GetFullChannel(
                             channel=(
                                 await USER.resolve_peer(
@@ -459,7 +459,7 @@ async def join_and_play(link, seek, pic, width, height):
     except NoActiveGroupCall:
         try:
             LOGGER.info("No active calls found, creating new")
-            await USER.send(CreateGroupCall(
+            await USER.invoke(CreateGroupCall(
                 peer=(await USER.resolve_peer(Config.CHAT)),
                 random_id=random.randint(10000, 999999999)
                 )
@@ -652,7 +652,7 @@ async def leave_call():
                     scheduler.remove_job(str(Config.CHAT), jobstore=None)
                 scheduler.add_job(start_record_stream, "date", id=str(Config.CHAT), run_date=sch['date'], max_instances=50, misfire_grace_time=None)
             try:
-                await USER.send(CreateGroupCall(
+                await USER.invoke(CreateGroupCall(
                     peer=(await USER.resolve_peer(Config.CHAT)),
                     random_id=random.randint(10000, 999999999),
                     schedule_date=int((sch['date']).timestamp()),
@@ -903,7 +903,7 @@ async def edit_title():
         title = "Live Stream"
     try:
         chat = await USER.resolve_peer(Config.CHAT)
-        full_chat=await USER.send(
+        full_chat=await USER.invoke(
             GetFullChannel(
                 channel=InputChannel(
                     channel_id=chat.channel_id,
@@ -912,14 +912,14 @@ async def edit_title():
                 ),
             )
         edit = EditGroupCallTitle(call=full_chat.full_chat.call, title=title)
-        await USER.send(edit)
+        await USER.invoke(edit)
     except Exception as e:
         LOGGER.error(f"Errors Occured while editing title - {e}", exc_info=True)
         pass
 
 async def stop_recording():
     job=str(Config.CHAT)
-    a = await bot.send(GetFullChannel(channel=(await bot.resolve_peer(Config.CHAT))))
+    a = await bot.invoke(GetFullChannel(channel=(await bot.resolve_peer(Config.CHAT))))
     if a.full_chat.call is None:
         k=scheduler.get_job(job_id=job, jobstore=None)
         if k:
@@ -928,10 +928,10 @@ async def stop_recording():
         await sync_to_db()
         return False, "No GroupCall Found"
     try:
-        await USER.send(
+        await USER.invoke(
             ToggleGroupCallRecord(
                 call=(
-                    await USER.send(
+                    await USER.invoke(
                         GetFullChannel(
                             channel=(
                                 await USER.resolve_peer(
@@ -942,7 +942,7 @@ async def stop_recording():
                         )
                     ).full_chat.call,
                 start=False,                 
-                )
+            )
             )
         Config.IS_RECORDING=False
         Config.LISTEN=True
@@ -977,7 +977,7 @@ async def start_record_stream():
         await stop_recording()
     if Config.WAS_RECORDING:
         Config.WAS_RECORDING=False
-    a = await bot.send(GetFullChannel(channel=(await bot.resolve_peer(Config.CHAT))))
+    a = await bot.invoke(GetFullChannel(channel=(await bot.resolve_peer(Config.CHAT))))
     job=str(Config.CHAT)
     if a.full_chat.call is None:
         k=scheduler.get_job(job_id=job, jobstore=None)
@@ -994,10 +994,10 @@ async def start_record_stream():
         else:
             tt = Config.RECORDING_TITLE
         if Config.IS_VIDEO_RECORD:
-            await USER.send(
+            await USER.invoke(
                 ToggleGroupCallRecord(
                     call=(
-                        await USER.send(
+                        await USER.invoke(
                             GetFullChannel(
                                 channel=(
                                     await USER.resolve_peer(
@@ -1015,10 +1015,10 @@ async def start_record_stream():
                 )
             time=240
         else:
-            await USER.send(
+            await USER.invoke(
                 ToggleGroupCallRecord(
                     call=(
-                        await USER.send(
+                        await USER.invoke(
                             GetFullChannel(
                                 channel=(
                                     await USER.resolve_peer(
@@ -1061,10 +1061,10 @@ async def start_record_stream():
             await sync_to_db()
             return False, str(e)
 
-async def renew_recording():
+    async def renew_recording():
     try:
         job=str(Config.CHAT)
-        a = await bot.send(GetFullChannel(channel=(await bot.resolve_peer(Config.CHAT))))
+        a = await bot.invoke(GetFullChannel(channel=(await bot.resolve_peer(Config.CHAT))))
         if a.full_chat.call is None:
             k=scheduler.get_job(job_id=job, jobstore=None)
             if k:
@@ -1083,10 +1083,10 @@ async def renew_recording():
         else:
             tt = Config.RECORDING_TITLE
         if Config.IS_VIDEO_RECORD:
-            await USER.send(
+            await USER.invoke(
                 ToggleGroupCallRecord(
                     call=(
-                        await USER.send(
+                        await USER.invoke(
                             GetFullChannel(
                                 channel=(
                                     await USER.resolve_peer(
@@ -1096,17 +1096,16 @@ async def renew_recording():
                                 )
                             )
                         ).full_chat.call,
-                    start=True,
-                    title=tt,
+                    start=True                  title=tt,
                     video=True,
                     video_portrait=pt,                 
                     )
                 )
         else:
-            await USER.send(
+            await USER.invoke(
                 ToggleGroupCallRecord(
                     call=(
-                        await USER.send(
+                        await USER.invoke(
                             GetFullChannel(
                                 channel=(
                                     await USER.resolve_peer(
