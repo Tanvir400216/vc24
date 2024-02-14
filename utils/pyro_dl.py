@@ -143,14 +143,14 @@ class Downloader():
                     await session.start()
 
                     for _ in range(3):
-                        exported_auth = await self.client.send(
+                        exported_auth = await self.client.invoke(
                             raw.functions.auth.ExportAuthorization(
                                 dc_id=dc_id
                             )
                         )
 
                         try:
-                            await session.send(
+                            await session.invoke(
                                 raw.functions.auth.ImportAuthorization(
                                     id=exported_auth.id,
                                     bytes=exported_auth.bytes
@@ -217,7 +217,7 @@ class Downloader():
         file_name = ""
 
         try:
-            r = await session.send(
+            r = await session.invoke(
                 raw.functions.upload.GetFile(
                     location=location,
                     offset=offset,
@@ -239,7 +239,7 @@ class Downloader():
                         f.write(chunk)
 
                         offset += limit
-                        r = await session.send(
+                        r = await session.invoke(
                             raw.functions.upload.GetFile(
                                 location=location,
                                 offset=offset,
@@ -266,7 +266,7 @@ class Downloader():
                     with open(filename, 'wb') as f:
                         file_name = f
                         while True:
-                            r2 = await cdn_session.send(
+                            r2 = await cdn_session.invoke(
                                 raw.functions.upload.GetCdnFile(
                                     file_token=r.file_token,
                                     offset=offset,
@@ -299,7 +299,7 @@ class Downloader():
                                 )
                             )
 
-                            hashes = await session.send(
+                            hashes = await session.invoke(
                                 raw.functions.upload.GetCdnFileHashes(
                                     file_token=r.file_token,
                                     offset=offset
