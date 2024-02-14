@@ -19,6 +19,8 @@ from utils import (
     sync_from_db,
     check_changes
 )
+
+from aiofiles.os import path as aiopath, remove as aioremove
 from user import group_call, USER
 from utils import LOGGER
 from config import Config
@@ -30,6 +32,19 @@ import os
 if Config.DATABASE_URI:
     from utils import db
 
+async def restart_notification():
+    if await aiopath.isfile(".restartmsg"):
+        with open(".restartmsg") as f:
+            chat_id, msg_id = map(int, f)
+    else:
+        chat_id, msg_id = 0, 0
+
+    if await aiopath.isfile(".restartmsg"):
+        try:
+            await bot.edit_message_text(chat_id=chat_id, message_id=msg_id, text='Restarted Successfully!')
+        except:
+            pass
+        await aioremove(".restartmsg")
 
 async def main():
     await bot.start()
@@ -101,6 +116,7 @@ async def main():
         await idle()
         return
 
+    await restart_notification()
     await idle()
     await bot.stop()
 
