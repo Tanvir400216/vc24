@@ -1097,7 +1097,7 @@ async def start_record_stream():
                             )
                         ).full_chat.call,
                     start=True,
-                    title=tt,                  title=tt,
+                    title=tt,
                     video=True,
                     video_portrait=pt,                 
                     )
