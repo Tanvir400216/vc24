@@ -22,7 +22,7 @@ try:
     from pyrogram.raw.functions.channels import GetFullChannel
     from pytgcalls import StreamType
     import yt_dlp
-    from pyrogram import filters
+    from pyrogram import filters, enums
     from pymongo import MongoClient
     from datetime import datetime
     from threading import Thread
@@ -637,7 +637,7 @@ async def leave_call():
     try:
         await group_call.leave_group_call(Config.CHAT)
     except Exception as e:
-        LOGGER.error(f"Errors while leaving call {e}", exc_info=True)
+        LOGGER.error(f"Errors while leaving call {e}")
     #Config.playlist.clear()
     if Config.STREAM_LINK:
         Config.STREAM_LINK=False
@@ -1397,18 +1397,13 @@ async def unmute():
 async def get_admins(chat):
     admins=Config.ADMINS
     if not Config.ADMIN_CACHE:
-        if 626664225 not in admins:
-            admins.append(626664225)
         try:
-            grpadmins=await bot.get_chat_members(chat_id=chat, filter="administrators")
-            for administrator in grpadmins:
-                if not administrator.user.id in admins:
-                    admins.append(administrator.user.id)
+            async for member in bot.get_chat_members(chat, filter=enums.ChatMembersFilter.ADMINISTRATORS):
+                admins.append(member.user.id)
         except Exception as e:
             LOGGER.error(f"Errors occured while getting admin list - {e}", exc_info=True)
             pass
         Config.ADMINS=admins
-        Config.ADMIN_CACHE=True
         if Config.DATABASE_URI:
             await db.edit_config("ADMINS", Config.ADMINS)
     return admins
@@ -1424,7 +1419,7 @@ async def is_admin(_, client, message: Message):
         return False
 
 async def valid_chat(_, client, message: Message):
-    if message.chat.type == "private":
+    if message.chat.type == enums.ChatType.PRIVATE:
         return True
     elif message.chat.id == Config.CHAT:
         return True
@@ -1610,7 +1605,7 @@ async def delete_messages(messages):
     await asyncio.sleep(Config.DELAY)
     for msg in messages:
         try:
-            if msg.chat.type == "supergroup":
+            if msg.chat.type == enums.ChatType.SUPERGROUP:
                 await msg.delete()
         except:
             pass
@@ -1857,7 +1852,10 @@ async def edit_config(var, value):
 
 
 async def update():
-    await leave_call()
+    try:
+        await leave_call()
+    except:
+        pass
     if Config.HEROKU_APP:
         Config.HEROKU_APP.restart()
     else:
