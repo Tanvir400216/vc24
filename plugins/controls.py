@@ -78,11 +78,12 @@ async def skip_track(_, m: Message):
             disable_web_page_preview=True,
             reply_markup=await get_buttons()
         )
-        await delete_messages([m])
+        await m.delete()
         return
     if not Config.playlist:
         await msg.edit("Playlist is Empty.")
-        await delete_messages([m, msg])
+        await m.delete()
+        await msg.delete()
         return
     if len(m.command) == 1:
         await skip()
@@ -97,13 +98,16 @@ async def skip_track(_, m: Message):
                     await msg.edit(f"Succesfully Removed from Playlist- {i}. **{Config.playlist[i][1]}**")
                     await clear_db_playlist(song=Config.playlist[i])
                     Config.playlist.pop(i)
-                    await delete_messages([m, msg])
+                    await m.delete()
+                    await msg.delete()
                 else:
                     await msg.edit(f"You cant skip first two songs- {i}")
-                    await delete_messages([m, msg])
+                    await m.delete()
+                    await msg.delete()
         except (ValueError, TypeError):
             await msg.edit("Invalid input")
-            await delete_messages([m, msg])
+            await m.delete()
+            await msg.delete()
     pl=await get_playlist_str()
     if m.chat.type == enums.ChatType.PRIVATE:
         await msg.edit(pl, disable_web_page_preview=True, reply_markup=await get_buttons())
@@ -111,7 +115,7 @@ async def skip_track(_, m: Message):
         if Config.msg.get('player'):
             await Config.msg['player'].delete()
         Config.msg['player'] = await msg.edit(pl, disable_web_page_preview=True, reply_markup=await get_buttons())
-        await delete_messages([m])
+        await m.delete()
 
 @Client.on_message(filters.command(["pause", f"pause@{Config.BOT_USERNAME}"]) & admin_filter & chat_filter)
 async def pause_playing(_, m: Message):
