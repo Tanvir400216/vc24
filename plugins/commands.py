@@ -20,6 +20,9 @@ import pytz
 from datetime import datetime
 import asyncio
 import os
+from aiofiles import open as aiopen
+from aiofiles.os import path as aiopath, remove as aioremove
+
 from pyrogram.errors.exceptions.bad_request_400 import (
     MessageIdInvalid, 
     MessageNotModified
@@ -164,7 +167,7 @@ async def show_help(client, message):
             ],
         ]
         )
-    if message.chat.type != "private" and message.from_user is None:
+    if message.chat.type != enums.ChatType.PRIVATE and message.from_user is None:
         k=await message.reply(
             text="I cant help you here, since you are an anonymous admin. Get help in PM",
             reply_markup=InlineKeyboardMarkup(
@@ -204,12 +207,15 @@ async def update_handler(client, message):
     if Config.HEROKU_APP:
         k = await message.reply("Heroku APP found, Restarting app to update.")
         if Config.DATABASE_URI:
-            msg = {"msg_id":k.message_id, "chat_id":k.chat.id}
+            msg = {"msg_id":k.id, "chat_id":k.chat.id}
             if not await db.is_saved("RESTART"):
                 db.add_config("RESTART", msg)
             else:
                 await db.edit_config("RESTART", msg)
             await sync_to_db()
+        else:
+            async with aiopen(".restartmsg", "w") as f:
+                await f.write(f"{k.chat.id}\n{k.id}\n")
     else:
         k = await message.reply("No Heroku APP found, Trying to restart.")
         if Config.DATABASE_URI:
@@ -218,6 +224,9 @@ async def update_handler(client, message):
                 db.add_config("RESTART", msg)
             else:
                 await db.edit_config("RESTART", msg)
+        else:
+            async with aiopen(".restartmsg", "w") as f:
+                await f.write(f"{k.chat.id}\n{k.id}\n")
     try:
         await message.delete()
     except:
