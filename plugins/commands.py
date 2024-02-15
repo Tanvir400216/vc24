@@ -14,6 +14,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 from utils import LOGGER
 from contextlib import suppress
+from pyrogram import enums
 from config import Config
 import calendar
 import pytz
