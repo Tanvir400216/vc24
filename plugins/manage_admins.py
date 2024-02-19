@@ -67,7 +67,7 @@ async def add_admin(client, message):
     Config.ADMINS.append(user_id)
     k=await message.reply(f"Succesfully promoted {user.mention} as VC admin🌻")
     await sync_to_db()
-    await delete_messages([message, k])
+    
 
 
 @Client.on_message(filters.command(['vcdemote', f"vcdemote@{Config.BOT_USERNAME}"]) & sudo_filter)
