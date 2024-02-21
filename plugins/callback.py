@@ -161,7 +161,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
             
         if not query.from_user.id in admins:
             await query.answer(
-                "😒 Played 𐍂ɪ†z.mp3",
+                "😒 𝐏𝐥𝐚𝐲𝐞𝐝 𐍂ɪ†z 🌻",
                 show_alert=True
                 )
             return
@@ -370,7 +370,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
                 await query.answer("Nothing Paused to resume", show_alert=True)
             else:
                 await resume()
-                await query.answer("Redumed the stream")
+                await query.answer("Resumed the stream")
                 await sleep(1)
             await query.message.edit_reply_markup(reply_markup=await get_buttons())
           
