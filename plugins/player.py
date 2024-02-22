@@ -506,5 +506,5 @@ async def not_chat(_, m: Message):
                 InlineKeyboardButton('🧩 Join Here', url='https://t.me/sugar_mmy_update'),
             ]
             ]
-        await m.reply("<b>This 24/7 music bot is hosted in a private group, you cannot use it in your group without the [bot owner's] (t.me.TanvirAhmed_555) permission.</b>", disable_web_page_preview=True, reply_markup=InlineKeyboardMarkup(buttons))
+        await m.reply("<b>This 24/7 music bot is hosted in a private group, you cannot use it in your group without the [bot owner's](https://t.me.TanvirAhmed_555) permission below.</b>", disable_web_page_preview=True, reply_markup=InlineKeyboardMarkup(buttons))
 
