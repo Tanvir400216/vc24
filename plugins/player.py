@@ -84,13 +84,13 @@ async def add_to_playlist(_, message: Message):
                 k=await message.reply("This command is only for admins.")
                 await delete_messages([message, k])
                 return
-        msg = await message.reply_text("🌈 **Checking recived input..**")
+        msg = await message.reply_text("❤️‍🔥 **Checking recived input..**")
         if message.reply_to_message and message.reply_to_message.video:
-            await msg.edit("🌈 **Checking Telegram Media...**")
+            await msg.edit("❤️‍🔥 **Checking Telegram Media...**")
             type='video'
             m_video = message.reply_to_message.video       
         elif message.reply_to_message and message.reply_to_message.document:
-            await msg.edit("🌈 **Checking Telegram Media...**")
+            await msg.edit("❤️‍🔥 **Checking Telegram Media...**")
             m_video = message.reply_to_message.document
             type='video'
             if not "video" in m_video.mime_type:
@@ -98,7 +98,7 @@ async def add_to_playlist(_, message: Message):
         elif message.reply_to_message and message.reply_to_message.audio:
             #if not Config.IS_VIDEO:
                 #return await message.reply("Play from audio file is available only if Video Mode if turned off.\nUse /settings to configure ypur player.")
-            await msg.edit("🌈 **Checking Telegram Media...**")
+            await msg.edit("❤️‍🔥 **Checking Telegram Media...**")
             type='audio'
             m_video = message.reply_to_message.audio       
         else:
@@ -187,11 +187,11 @@ async def add_to_playlist(_, message: Message):
             await msg.edit("Media added to playlist")
         elif type in ["youtube", "query", "ytdl_s"]:
             if type=="youtube":
-                await msg.edit("🌈 **Fetching Video From YouTube...**")
+                await msg.edit("🌻 **Fetching Video From YouTube...**")
                 url=yturl
             elif type=="query":
                 try:
-                    await msg.edit("🌈 **Fetching Video From YouTube...**")
+                    await msg.edit("🌻 **Fetching Video From YouTube...**")
                     ytquery=ysearch
                     results = YoutubeSearch(ytquery, max_results=1).to_dict()
                     url = f"https://youtube.com{results[0]['url_suffix']}"
@@ -502,9 +502,9 @@ async def not_chat(_, m: Message):
     else:
         buttons = [
             [
-                InlineKeyboardButton('🌈Make Own Bot Contact', url='t.me/TanvirAhmed_555'),
+                InlineKeyboardButton('👑 Bot Owner', url='t.me/TanvirAhmed_555'),
                 InlineKeyboardButton('🧩 Join Here', url='https://t.me/sugar_mmy_update'),
             ]
             ]
-        await m.reply("<b>You can't use this bot in this group, for that you have to make your own bot from the [SOURCE CODE](Private) below.</b>", disable_web_page_preview=True, reply_markup=InlineKeyboardMarkup(buttons))
+        await m.reply("<b>This 24/7 music bot is hosted in a private group, you cannot use it in your group without the [bot owner's] (t.me.TanvirAhmed_555) permission.</b>", disable_web_page_preview=True, reply_markup=InlineKeyboardMarkup(buttons))
 
