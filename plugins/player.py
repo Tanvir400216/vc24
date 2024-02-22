@@ -84,13 +84,13 @@ async def add_to_playlist(_, message: Message):
                 k=await message.reply("This command is only for admins.")
                 await delete_messages([message, k])
                 return
-        msg = await message.reply_text("⚡️ **Checking recived input..**")
+        msg = await message.reply_text("🌈 **Checking recived input..**")
         if message.reply_to_message and message.reply_to_message.video:
-            await msg.edit("⚡️ **Checking Telegram Media...**")
+            await msg.edit("🌈 **Checking Telegram Media...**")
             type='video'
             m_video = message.reply_to_message.video       
         elif message.reply_to_message and message.reply_to_message.document:
-            await msg.edit("⚡️ **Checking Telegram Media...**")
+            await msg.edit("🌈 **Checking Telegram Media...**")
             m_video = message.reply_to_message.document
             type='video'
             if not "video" in m_video.mime_type:
@@ -98,7 +98,7 @@ async def add_to_playlist(_, message: Message):
         elif message.reply_to_message and message.reply_to_message.audio:
             #if not Config.IS_VIDEO:
                 #return await message.reply("Play from audio file is available only if Video Mode if turned off.\nUse /settings to configure ypur player.")
-            await msg.edit("⚡️ **Checking Telegram Media...**")
+            await msg.edit("🌈 **Checking Telegram Media...**")
             type='audio'
             m_video = message.reply_to_message.audio       
         else:
@@ -187,11 +187,11 @@ async def add_to_playlist(_, message: Message):
             await msg.edit("Media added to playlist")
         elif type in ["youtube", "query", "ytdl_s"]:
             if type=="youtube":
-                await msg.edit("⚡️ **Fetching Video From YouTube...**")
+                await msg.edit("🌈 **Fetching Video From YouTube...**")
                 url=yturl
             elif type=="query":
                 try:
-                    await msg.edit("⚡️ **Fetching Video From YouTube...**")
+                    await msg.edit("🌈 **Fetching Video From YouTube...**")
                     ytquery=ysearch
                     results = YoutubeSearch(ytquery, max_results=1).to_dict()
                     url = f"https://youtube.com{results[0]['url_suffix']}"
@@ -483,7 +483,7 @@ allcmd = ["play", "player", f"play@{Config.BOT_USERNAME}", f"player@{Config.BOT_
 
 @Client.on_message(filters.command(admincmds) & ~admin_filter & chat_filter)
 async def notforu(_, m: Message):
-    k = await _.send_cached_media(chat_id=m.chat.id, file_id="CAACAgUAAxkBAAECMLFltSjiP5EXiTAjAAEGtgb_gHvMS98AAqMMAALw2VhUD4u98XTHNzU0BA", caption="You Are Not Authorized", reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton('⚡️Join Here', url='https://t.me/sugar_mmy_update')]]))
+    k = await _.send_cached_media(chat_id=m.chat.id, file_id="CAACAgUAAxkBAAECMLFltSjiP5EXiTAjAAEGtgb_gHvMS98AAqMMAALw2VhUD4u98XTHNzU0BA", caption="You Are Not Authorized", reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton('✔️Join Here', url='https://t.me/sugar_mmy_update')]]))
     await delete_messages([m, k])
 
 @Client.on_message(filters.command(allcmd) & ~chat_filter & filters.group)
@@ -491,7 +491,7 @@ async def not_chat(_, m: Message):
     if m.from_user is not None and m.from_user.id in Config.SUDO:
         buttons = [
             [
-                InlineKeyboardButton(',🚸Change CHAT', callback_data='set_new_chat'),
+                InlineKeyboardButton(',⚠️Change CHAT', callback_data='set_new_chat'),
             ],
             [
                 InlineKeyboardButton('No', callback_data='closesudo'),
