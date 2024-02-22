@@ -491,7 +491,7 @@ async def not_chat(_, m: Message):
     if m.from_user is not None and m.from_user.id in Config.SUDO:
         buttons = [
             [
-                InlineKeyboardButton(',⚠️Change CHAT', callback_data='set_new_chat'),
+                InlineKeyboardButton('⚡Change CHAT', callback_data='set_new_chat'),
             ],
             [
                 InlineKeyboardButton('No', callback_data='closesudo'),
@@ -506,5 +506,5 @@ async def not_chat(_, m: Message):
                 InlineKeyboardButton('🧩 Join Here', url='https://t.me/sugar_mmy_update'),
             ]
             ]
-        await m.reply("<b>This 24/7 music bot is hosted in a private group, you cannot use it in your group without the [bot owner's](https://t.me.TanvirAhmed_555) permission below.</b>", disable_web_page_preview=True, reply_markup=InlineKeyboardMarkup(buttons))
+        await m.reply("<b>This 24/7 music bot is hosted in a private group, you cannot use it in your group without the bot owner's permission.</b>", disable_web_page_preview=True, reply_markup=InlineKeyboardMarkup(buttons))
 
