@@ -135,6 +135,8 @@ async def start(client, message):
         [
             InlineKeyboardButton('⚙️ Update Channel', url='https://t.me/sugar_mmy_update'),
             InlineKeyboardButton('🧩 Source', url='https://t.me/suggar_support_group/290')
+            InlineKeyboardButton('❣️ Join', url='https://t.me/feelingspeace')
+            InlineKeyboardButton('🛠️ Developer' url='https://t.me/TanvirAhmed_555')
         ],
         [
             InlineKeyboardButton('👨🏼‍🦯 Help', callback_data='help_main'),
