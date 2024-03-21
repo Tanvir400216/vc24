@@ -1458,7 +1458,7 @@ async def get_playlist_str():
             tplaylist.clear()
         else:
             pl = f"▶ **Playlist**: ㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤ\n" + "\n".join([
-                f"**{i}**. **🎸{x[1]}**\n    🤵‍♀**Requested by:** {x[4]}\n"
+                f"**{i}**. **🎸{x[1]}**\n   🤵‍♀**Requested by:** {x[4]}\n"
                 for i, x in enumerate(Config.playlist)
             ])
     return pl
