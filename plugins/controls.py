@@ -197,7 +197,7 @@ async def set_mute(_, m: Message):
     k=await mute()
     Config.MUTED = True
     if k:
-        k = await m.reply_text(f" 🔇 Succesfully Muted ")
+        k = await m.reply_text(f" 🔇 𝘚𝘶𝘤𝘤𝘦𝘴𝘧𝘶𝘭𝘭𝘺 𝘔𝘶𝘵𝘦𝘥 ")
         await delete_messages([m, k])
     else:
         k = await m.reply_text("Already muted.")
@@ -220,7 +220,7 @@ async def set_unmute(_, m: Message):
     k=await unmute()
     Config.MUTED = False
     if k:
-        k = await m.reply_text(f"🔊 Succesfully Unmuted ")
+        k = await m.reply_text(f"🔊 𝘚𝘶𝘤𝘤𝘦𝘴𝘧𝘶𝘭𝘭𝘺 𝘜𝘯𝘮𝘶𝘵𝘦𝘥 ")
         await delete_messages([m, k])
         return
     else:
