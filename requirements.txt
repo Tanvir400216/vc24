@@ -14,5 +14,3 @@ pytz
 apscheduler
 python-dotenv
 aiofiles
-aiohttp
-dnspython
