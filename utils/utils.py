@@ -1446,19 +1446,19 @@ async def get_playlist_str():
     if Config.STREAM_LINK:
         pl = f"🔈 Streaming [Live Stream]({Config.STREAM_LINK}) ㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤ"
     elif not Config.playlist:
-        pl = f"🔈 Playlist is empty baby.Streaming [STARTUP_STREAM]({Config.STREAM_URL})ㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤ"
+        pl = f"🔈 Playlist is empty.Streaming [STARTUP_STREAM]({Config.STREAM_URL})ㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤ"
     else:
         if len(Config.playlist)>=25:
             tplaylist=Config.playlist[:25]
             pl=f"Listing first 25 songs of total {len(Config.playlist)} songs.\n"
             pl += f"▶ **Playlist**: ㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤ\n" + "\n".join([
-                f"**{i}**. **🌻{x[1]}**\n  Ritz 🧸**Requested by:** {x[4]}"
+                f"**{i}**. **🎸{x[1]}**\n   🤵‍♀**Requested by:** {x[4]}"
                 for i, x in enumerate(tplaylist)
                 ])
             tplaylist.clear()
         else:
             pl = f"▶ **Playlist**: ㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤ\n" + "\n".join([
-                f"**{i}**. **🌻{x[1]}**\n  Ritz 🧸**Requested by:** {x[4]}\n"
+                f"**{i}**. **🎸{x[1]}**\n   🤵‍♀**Requested by:** {x[4]}\n"
                 for i, x in enumerate(Config.playlist)
             ])
     return pl
